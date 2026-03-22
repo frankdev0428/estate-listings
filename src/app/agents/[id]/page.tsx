@@ -3,12 +3,12 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
 interface Props {
-  params: Promise<{ id: string }>
+  params: { id: string }
 }
 
 export default async function AgentProfilePage({ params }: Props) {
-  const { id } = await params
-  const supabase = await createClient()
+  const { id } = params
+  const supabase = createClient()
 
   const { data: agent } = await supabase
     .from('agents')
@@ -98,27 +98,29 @@ export default async function AgentProfilePage({ params }: Props) {
         {listings && listings.length > 0 ? (
           <div className="grid sm:grid-cols-2 gap-6">
             {listings.map((listing) => (
-              <div key={listing.id} className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-                <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-40 flex items-center justify-center">
-                  {listing.image_url ? (
-                    <img src={listing.image_url} alt={listing.title} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-4xl">🏠</span>
-                  )}
-                </div>
-                <div className="p-5">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-semibold text-gray-900">{listing.title}</h3>
-                    <p className="text-blue-600 font-bold">${listing.price.toLocaleString()}</p>
+              <Link key={listing.id} href={`/listings/${listing.id}`}>
+                <div className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+                  <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-40 flex items-center justify-center">
+                    {listing.image_url ? (
+                      <img src={listing.image_url} alt={listing.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-4xl">🏠</span>
+                    )}
                   </div>
-                  <p className="text-gray-500 text-sm mt-1">{listing.address}</p>
-                  <div className="flex gap-3 mt-3 text-sm text-gray-600">
-                    <span>🛏 {listing.bedrooms}</span>
-                    <span>🚿 {listing.bathrooms}</span>
-                    <span>📐 {listing.sqft.toLocaleString()} sqft</span>
+                  <div className="p-5">
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-semibold text-gray-900 hover:text-blue-600 transition-colors">{listing.title}</h3>
+                      <p className="text-blue-600 font-bold">${listing.price.toLocaleString()}</p>
+                    </div>
+                    <p className="text-gray-500 text-sm mt-1">{listing.address}</p>
+                    <div className="flex gap-3 mt-3 text-sm text-gray-600">
+                      <span>🛏 {listing.bedrooms}</span>
+                      <span>🚿 {listing.bathrooms}</span>
+                      <span>📐 {listing.sqft.toLocaleString()} sqft</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (

@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import AgentCard from '@/components/AgentCard'
 
 export default async function AgentsPage() {
-  const supabase = await createClient()
+  const supabase = createClient()
   const { data: agents, error } = await supabase
     .from('agents')
     .select('*, cities(name, state)')

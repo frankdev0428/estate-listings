@@ -1,14 +1,15 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import ListingCard from '@/components/ListingCard'
 
 interface Props {
-  params: Promise<{ id: string }>
+  params: { id: string }
 }
 
 export default async function CityPage({ params }: Props) {
-  const { id } = await params
-  const supabase = await createClient()
+  const { id } = params
+  const supabase = createClient()
 
   const { data: city } = await supabase
     .from('cities')
@@ -18,11 +19,12 @@ export default async function CityPage({ params }: Props) {
 
   if (!city) notFound()
 
-  const { data: listings } = await supabase
+  const { data: listings, count: listingCount } = await supabase
     .from('listings')
-    .select('*, agents(name, avatar_url)')
+    .select('*, agents(name, avatar_url)', { count: 'exact' })
     .eq('city_id', id)
     .order('created_at', { ascending: false })
+    .limit(12)
 
   const { data: agents } = await supabase
     .from('agents')
@@ -51,31 +53,40 @@ export default async function CityPage({ params }: Props) {
       <div className="grid lg:grid-cols-3 gap-10">
         {/* Listings */}
         <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Available Properties</h2>
+          <div className="flex items-baseline justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Available Properties</h2>
+            {listingCount != null && listingCount > 0 && (
+              <span className="text-sm text-gray-500">{listingCount} total</span>
+            )}
+          </div>
           {listings && listings.length > 0 ? (
-            <div className="space-y-4">
-              {listings.map((listing) => (
-                <div key={listing.id} className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-semibold text-lg text-gray-900">{listing.title}</h3>
-                      <p className="text-gray-500 text-sm mt-1">{listing.address}</p>
-                    </div>
-                    <p className="text-blue-600 font-bold text-xl">
-                      ${listing.price.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="flex gap-4 mt-3 text-sm text-gray-600">
-                    <span>🛏 {listing.bedrooms} beds</span>
-                    <span>🚿 {listing.bathrooms} baths</span>
-                    <span>📐 {listing.sqft.toLocaleString()} sqft</span>
-                  </div>
-                  {listing.description && (
-                    <p className="text-gray-600 text-sm mt-3 line-clamp-2">{listing.description}</p>
-                  )}
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="grid sm:grid-cols-2 gap-5">
+                {listings.map((listing) => (
+                  <ListingCard
+                    key={listing.id}
+                    id={listing.id}
+                    title={listing.title}
+                    address={listing.address}
+                    price={listing.price}
+                    bedrooms={listing.bedrooms}
+                    bathrooms={listing.bathrooms}
+                    sqft={listing.sqft}
+                    image_url={listing.image_url}
+                    property_type={listing.property_type}
+                    agent={listing.agents as any}
+                  />
+                ))}
+              </div>
+              {listingCount != null && listingCount > 12 && (
+                <p className="text-center text-sm text-gray-400 mt-6">
+                  Showing 12 of {listingCount} listings.{' '}
+                  <Link href={`/search?city=${id}`} className="text-blue-600 hover:underline">
+                    View all →
+                  </Link>
+                </p>
+              )}
+            </>
           ) : (
             <div className="text-center py-16 text-gray-400 border border-dashed border-gray-200 rounded-xl">
               <p>No listings in this city yet.</p>

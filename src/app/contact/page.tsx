@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import LeadForm from '@/components/LeadForm'
 
 export default async function ContactPage() {
-  const supabase = await createClient()
+  const supabase = createClient()
   const { data: cities } = await supabase
     .from('cities')
     .select('id, name, state')

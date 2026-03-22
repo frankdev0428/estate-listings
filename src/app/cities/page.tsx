@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function CitiesPage() {
-  const supabase = await createClient()
+  const supabase = createClient()
   const { data: cities, error } = await supabase
     .from('cities')
     .select('*')

@@ -9,7 +9,8 @@ create table if not exists cities (
   state         text not null,
   image_url     text,
   listing_count integer not null default 0,
-  created_at    timestamptz default now()
+  created_at    timestamptz default now(),
+  unique (name, state)
 );
 
 -- Agents
@@ -26,6 +27,28 @@ create table if not exists agents (
   specialties    text[]  not null default '{}',
   is_active      boolean not null default true,
   created_at     timestamptz default now()
+);
+
+-- Listings
+create table if not exists listings (
+  id            uuid primary key default gen_random_uuid(),
+  title         text not null,
+  price         integer not null,
+  address       text not null,
+  city_id       uuid not null references cities(id) on delete cascade,
+  agent_id      uuid not null references agents(id) on delete cascade,
+  bedrooms      integer not null default 0,
+  bathrooms     integer not null default 0,
+  sqft          integer not null default 0,
+  image_url     text,
+  images        text[] not null default '{}',   -- additional photos
+  description   text,
+  property_type text not null default 'House'   -- House, Condo, Townhouse, etc.
+                  check (property_type in ('House','Condo','Townhouse','Multi-Family','Land','Other')),
+  year_built    integer,
+  parking       integer not null default 0,     -- number of parking spaces
+  hoa_fee       integer,                        -- monthly HOA, null = none
+  created_at    timestamptz default now()
 );
 
 -- Leads
@@ -49,13 +72,21 @@ create table if not exists leads (
 -- ROW LEVEL SECURITY
 -- ============================================================
 
-alter table cities  enable row level security;
-alter table agents  enable row level security;
-alter table leads   enable row level security;
+alter table cities    enable row level security;
+alter table agents    enable row level security;
+alter table listings  enable row level security;
+alter table leads     enable row level security;
 
--- Public read access for cities and agents
-create policy "public_read_cities"  on cities for select using (true);
-create policy "public_read_agents"  on agents for select using (true);
+-- Drop policies before recreating (safe to re-run)
+drop policy if exists "public_read_cities"   on cities;
+drop policy if exists "public_read_agents"   on agents;
+drop policy if exists "public_read_listings" on listings;
+drop policy if exists "public_insert_leads"  on leads;
+
+-- Public read access
+create policy "public_read_cities"    on cities    for select using (true);
+create policy "public_read_agents"    on agents    for select using (true);
+create policy "public_read_listings"  on listings  for select using (true);
 
 -- Leads: public insert only; no public read (protect PII)
 create policy "public_insert_leads" on leads for insert with check (true);
@@ -140,8 +171,10 @@ $$;
 -- INDEXES
 -- ============================================================
 
-create index if not exists idx_agents_city_id  on agents(city_id);
-create index if not exists idx_leads_agent_id  on leads(agent_id);
+create index if not exists idx_agents_city_id    on agents(city_id);
+create index if not exists idx_listings_city_id  on listings(city_id);
+create index if not exists idx_listings_agent_id on listings(agent_id);
+create index if not exists idx_leads_agent_id    on leads(agent_id);
 create index if not exists idx_leads_city_id   on leads(city_id);
 create index if not exists idx_leads_status    on leads(status);
 create index if not exists idx_leads_email     on leads(email);

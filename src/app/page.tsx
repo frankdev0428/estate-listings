@@ -1,42 +1,34 @@
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
+import SearchFilters from '@/components/SearchFilters'
+import ListingCard from '@/components/ListingCard'
 
 export default async function HomePage() {
-  const supabase = await createClient()
-  const { data: cities } = await supabase
-    .from('cities')
-    .select('*')
-    .order('listing_count', { ascending: false })
-    .limit(6)
+  const supabase = createClient()
 
-  const { data: agents } = await supabase
-    .from('agents')
-    .select('*')
-    .order('rating', { ascending: false })
-    .limit(3)
+  const [{ data: cities }, { data: agents }, { data: allCities }, { data: featuredListings }] = await Promise.all([
+    supabase.from('cities').select('*').order('listing_count', { ascending: false }).limit(6),
+    supabase.from('agents').select('*').order('rating', { ascending: false }).limit(3),
+    supabase.from('cities').select('id, name, state').order('name'),
+    supabase.from('listings').select('*, agents(name, avatar_url)').order('created_at', { ascending: false }).limit(8),
+  ])
 
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-24 px-4">
+      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold mb-6">Find Your Dream Home</h1>
-          <p className="text-xl text-blue-100 mb-10">
-            Browse thousands of listings across top cities with expert agents ready to help.
+          <h1 className="text-5xl font-bold mb-4">Find Your Dream Home</h1>
+          <p className="text-xl text-blue-100 mb-8">
+            Browse listings across top cities with expert agents ready to help.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/cities"
-              className="bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg hover:bg-blue-50 transition-colors"
-            >
-              Browse Cities
-            </Link>
-            <Link
-              href="/agents"
-              className="border border-white text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Find an Agent
-            </Link>
+          <Suspense>
+            <SearchFilters cities={allCities ?? []} compact />
+          </Suspense>
+          <div className="flex gap-5 justify-center mt-5 text-sm text-blue-200">
+            <Link href="/cities" className="hover:text-white transition-colors">Browse Cities →</Link>
+            <Link href="/agents" className="hover:text-white transition-colors">Find an Agent →</Link>
           </div>
         </div>
       </section>
@@ -80,6 +72,38 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      {/* Featured Listings */}
+      {featuredListings && featuredListings.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 py-16">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">Latest Listings</h2>
+              <p className="text-gray-500 text-sm mt-1">Freshly added properties across all cities</p>
+            </div>
+            <Link href="/search" className="text-blue-600 hover:underline font-medium">
+              View all &rarr;
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {featuredListings.map((listing) => (
+              <ListingCard
+                key={listing.id}
+                id={listing.id}
+                title={listing.title}
+                address={listing.address}
+                price={listing.price}
+                bedrooms={listing.bedrooms}
+                bathrooms={listing.bathrooms}
+                sqft={listing.sqft}
+                image_url={listing.image_url}
+                property_type={listing.property_type}
+                agent={listing.agents as any}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Featured Agents */}
       <section className="bg-gray-50 py-16">

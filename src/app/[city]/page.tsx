@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
+import { createStaticClient } from '@/lib/supabase/static'
 import AgentCard from '@/components/AgentCard'
 import LeadForm from '@/components/LeadForm'
 import Link from 'next/link'
@@ -17,7 +18,8 @@ function slugToName(slug: string) {
 // ─── Static params (build-time pre-rendering) ────────────────────────────────
 
 export async function generateStaticParams() {
-  const supabase = await createClient()
+  // Must use static client — cookies() cannot be called at build time
+  const supabase = createStaticClient()
   const { data: cities } = await supabase.from('cities').select('name')
   return (cities ?? []).map((c) => ({
     city: c.name.toLowerCase().replace(/\s+/g, '-'),
@@ -76,7 +78,7 @@ export default async function CityLandingPage({ params }: Props) {
   const { city: citySlug } = await params
   const cityName = slugToName(citySlug)
 
-  const supabase = await createClient()
+  const supabase = createClient()
 
   // Match city by name (case-insensitive)
   const { data: cities } = await supabase

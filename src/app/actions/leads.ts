@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { sendLeadConfirmation, sendAgentNotification } from '@/lib/email'
 
 export type LeadFormState =
   | { status: 'idle' }
@@ -23,17 +24,17 @@ export async function submitLead(
     return { status: 'error', message: 'Name and email are required.' }
   }
 
-  const supabase = await createClient()
+  const supabase = createClient()
 
   // Auto-assign agent: prefer explicit selection, else pick highest-rated in city
   let resolvedAgentId = agentId || null
-
   if (!resolvedAgentId && cityId) {
     const { data: assigned } = await supabase
       .rpc('assign_agent_for_city', { p_city_id: cityId })
     resolvedAgentId = assigned ?? null
   }
 
+  // ── Insert lead into Supabase ────────────────────────────────────────────
   const { error } = await supabase.rpc('insert_lead', {
     p_name:     name.trim(),
     p_email:    email.trim(),
@@ -51,16 +52,36 @@ export async function submitLead(
     return { status: 'error', message: 'Something went wrong. Please try again.' }
   }
 
-  // Resolve the assigned agent's name for the success message
-  let agentName: string | null = null
-  if (resolvedAgentId) {
-    const { data: agent } = await supabase
-      .from('agents')
-      .select('name')
-      .eq('id', resolvedAgentId)
-      .single()
-    agentName = agent?.name ?? null
+  // ── Resolve agent + city details for emails ──────────────────────────────
+  const [agentResult, cityResult] = await Promise.all([
+    resolvedAgentId
+      ? supabase.from('agents').select('name, email').eq('id', resolvedAgentId).single()
+      : Promise.resolve({ data: null }),
+    cityId
+      ? supabase.from('cities').select('name').eq('id', cityId).single()
+      : Promise.resolve({ data: null }),
+  ])
+
+  const agentName  = agentResult.data?.name  ?? null
+  const agentEmail = agentResult.data?.email ?? null
+  const cityName   = cityResult.data?.name   ?? null
+
+  const emailPayload = {
+    leadName:   name.trim(),
+    leadEmail:  email.trim(),
+    leadPhone:  phone   || null,
+    budget:     budget  || null,
+    timeline:   timeline || null,
+    cityName,
+    agentName,
+    agentEmail,
   }
+
+  // ── Send emails in parallel, non-blocking to the response ───────────────
+  await Promise.allSettled([
+    sendLeadConfirmation(emailPayload),
+    sendAgentNotification(emailPayload),
+  ])
 
   return { status: 'success', agentName }
 }

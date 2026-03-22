@@ -32,6 +32,7 @@ export default function RootLayout({
               </Link>
               <div className="flex gap-6 text-sm font-medium text-gray-600">
                 <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+                <Link href="/search" className="hover:text-blue-600 transition-colors">Search</Link>
                 <Link href="/cities" className="hover:text-blue-600 transition-colors">Cities</Link>
                 <Link href="/agents" className="hover:text-blue-600 transition-colors">Agents</Link>
                 <Link href="/contact" className="bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700 transition-colors">Contact</Link>

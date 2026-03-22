@@ -42,7 +42,12 @@ export type Database = {
           bathrooms: number
           sqft: number
           image_url: string | null
+          images: string[]
           description: string | null
+          property_type: 'House' | 'Condo' | 'Townhouse' | 'Multi-Family' | 'Land' | 'Other'
+          year_built: number | null
+          parking: number
+          hoa_fee: number | null
           created_at: string
         }
         Insert: Omit<Database['public']['Tables']['listings']['Row'], 'id' | 'created_at'>

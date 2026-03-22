@@ -22,6 +22,7 @@ export type Database = {
           bio: string | null
           avatar_url: string | null
           city_id: string | null
+          specialties: string[]
           listings_sold: number
           rating: number
           created_at: string

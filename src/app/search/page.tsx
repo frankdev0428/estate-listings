@@ -111,7 +111,7 @@ export default async function SearchPage({ searchParams }: Props) {
           {listings && listings.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
               {listings.map((listing) => {
-                const city = listing.cities as { name: string; state: string } | null
+                const city = (listing.cities as unknown) as { name: string; state: string } | null
                 return (
                   <Link key={listing.id} href={`/listings/${listing.id}`}>
                     <article className="group border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all cursor-pointer bg-white">

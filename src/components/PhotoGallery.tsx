@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 interface Props {
   images: string[]   // all photo URLs (hero first)
@@ -25,10 +26,11 @@ export default function PhotoGallery({ images, title }: Props) {
     <div className="space-y-3">
       {/* Main photo */}
       <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-gray-100 group">
-        <img
+        <Image
           src={images[active]}
           alt={`${title} — photo ${active + 1}`}
-          className="w-full h-full object-cover transition-opacity duration-300"
+          fill
+          className="object-cover transition-opacity duration-300"
         />
 
         {images.length > 1 && (
@@ -64,13 +66,13 @@ export default function PhotoGallery({ images, title }: Props) {
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`flex-shrink-0 w-20 h-14 rounded-lg overflow-hidden border-2 transition-all ${
+              className={`relative flex-shrink-0 w-20 h-14 rounded-lg overflow-hidden border-2 transition-all ${
                 i === active
                   ? 'border-blue-500 opacity-100'
                   : 'border-transparent opacity-60 hover:opacity-90'
               }`}
             >
-              <img src={src} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+              <Image src={src} alt={`Thumbnail ${i + 1}`} fill className="object-cover" />
             </button>
           ))}
         </div>

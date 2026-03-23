@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function CitiesPage() {
@@ -24,9 +25,9 @@ export default async function CitiesPage() {
           {cities.map((city) => (
             <Link key={city.id} href={`/cities/${city.id}`}>
               <div className="group rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg transition-all cursor-pointer">
-                <div className="bg-gradient-to-br from-blue-100 to-blue-200 h-48 flex items-center justify-center">
+                <div className="relative bg-gradient-to-br from-blue-100 to-blue-200 h-48 flex items-center justify-center">
                   {city.image_url ? (
-                    <img src={city.image_url} alt={city.name} className="w-full h-full object-cover" />
+                    <Image src={city.image_url} alt={city.name} fill className="object-cover" />
                   ) : (
                     <span className="text-5xl">🏙️</span>
                   )}

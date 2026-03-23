@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ListingCard from '@/components/ListingCard'
@@ -74,7 +75,7 @@ export default async function CityPage({ params }: Props) {
                     sqft={listing.sqft}
                     image_url={listing.image_url}
                     property_type={listing.property_type}
-                    agent={listing.agents as any}
+                    agent={listing.agents as { name: string; avatar_url?: string | null } | null}
                   />
                 ))}
               </div>
@@ -102,9 +103,9 @@ export default async function CityPage({ params }: Props) {
               {agents.map((agent) => (
                 <Link key={agent.id} href={`/agents/${agent.id}`}>
                   <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:shadow-md transition-shadow cursor-pointer">
-                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-xl overflow-hidden flex-shrink-0">
+                    <div className="relative w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-xl overflow-hidden flex-shrink-0">
                       {agent.avatar_url ? (
-                        <img src={agent.avatar_url} alt={agent.name} className="w-full h-full object-cover" />
+                        <Image src={agent.avatar_url} alt={agent.name} fill className="object-cover" />
                       ) : '👤'}
                     </div>
                     <div>

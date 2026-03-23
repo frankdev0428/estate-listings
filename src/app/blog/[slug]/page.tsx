@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import ReactMarkdown from 'react-markdown'
 import { createClient } from '@/lib/supabase/server'
 import BlogCard from '@/components/BlogCard'
@@ -92,9 +93,9 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Author row */}
         <div className="flex items-center gap-3 mt-6 pt-6 border-t border-gray-100">
-          <div className="w-10 h-10 rounded-full bg-blue-100 overflow-hidden flex items-center justify-center text-lg flex-shrink-0">
+          <div className="relative w-10 h-10 rounded-full bg-blue-100 overflow-hidden flex items-center justify-center text-lg flex-shrink-0">
             {post.author_avatar
-              ? <img src={post.author_avatar} alt={post.author_name} className="w-full h-full object-cover" />
+              ? <Image src={post.author_avatar} alt={post.author_name} fill className="object-cover" />
               : '✍️'}
           </div>
           <div>
@@ -106,8 +107,8 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* Cover image */}
       {post.image_url && (
-        <div className="rounded-2xl overflow-hidden mb-10 h-80 bg-gray-100">
-          <img src={post.image_url} alt={post.title} className="w-full h-full object-cover" />
+        <div className="relative rounded-2xl overflow-hidden mb-10 h-80 bg-gray-100">
+          <Image src={post.image_url} alt={post.title} fill className="object-cover" />
         </div>
       )}
 

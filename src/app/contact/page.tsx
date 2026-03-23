@@ -13,7 +13,7 @@ export default async function ContactPage() {
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold text-gray-900">Get in Touch</h1>
         <p className="text-gray-500 mt-2">
-          Tell us what you're looking for and we'll match you with the right agent.
+          Tell us what you&apos;re looking for and we&apos;ll match you with the right agent.
         </p>
       </div>
 

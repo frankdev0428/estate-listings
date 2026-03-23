@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import PhotoGallery from '@/components/PhotoGallery'
 
@@ -163,9 +164,9 @@ export default async function ListingPage({ params }: Props) {
                 {related.map((r) => (
                   <Link key={r.id} href={`/listings/${r.id}`}>
                     <div className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-                      <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-32 flex items-center justify-center">
+                      <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 h-32 flex items-center justify-center">
                         {r.image_url
-                          ? <img src={r.image_url} alt={r.title} className="w-full h-full object-cover" />
+                          ? <Image src={r.image_url} alt={r.title} fill className="object-cover" />
                           : <span className="text-3xl">🏠</span>
                         }
                       </div>
@@ -197,9 +198,9 @@ export default async function ListingPage({ params }: Props) {
               </p>
 
               <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-2xl overflow-hidden flex-shrink-0">
+                <div className="relative w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-2xl overflow-hidden flex-shrink-0">
                   {agent.avatar_url
-                    ? <img src={agent.avatar_url} alt={agent.name} className="w-full h-full object-cover" />
+                    ? <Image src={agent.avatar_url} alt={agent.name} fill className="object-cover" />
                     : '👤'
                   }
                 </div>

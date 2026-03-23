@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 type Props = {
   id: string
@@ -22,7 +23,7 @@ export default function ListingCard({
         {/* Image */}
         <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 h-48 flex-shrink-0">
           {image_url ? (
-            <img src={image_url} alt={title} className="w-full h-full object-cover" />
+            <Image src={image_url} alt={title} fill className="object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-5xl">🏠</div>
           )}
@@ -59,9 +60,9 @@ export default function ListingCard({
           {/* Agent */}
           {agent && (
             <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-              <div className="w-6 h-6 rounded-full bg-blue-100 overflow-hidden flex-shrink-0 flex items-center justify-center text-xs">
+              <div className="relative w-6 h-6 rounded-full bg-blue-100 overflow-hidden flex-shrink-0 flex items-center justify-center text-xs">
                 {agent.avatar_url
-                  ? <img src={agent.avatar_url} alt={agent.name} className="w-full h-full object-cover" />
+                  ? <Image src={agent.avatar_url} alt={agent.name} fill className="object-cover" />
                   : '👤'}
               </div>
               <span className="text-xs text-gray-500 truncate">{agent.name}</span>

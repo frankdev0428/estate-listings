@@ -76,7 +76,6 @@ interface Props {
 
 export default async function CityLandingPage({ params }: Props) {
   const { city: citySlug } = await params
-  const cityName = slugToName(citySlug)
 
   const supabase = createClient()
 

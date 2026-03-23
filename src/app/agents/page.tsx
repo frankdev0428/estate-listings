@@ -22,7 +22,7 @@ export default async function AgentsPage() {
       {agents && agents.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {agents.map((agent) => {
-            const city = agent.cities as { name: string; state: string } | null
+            const city = agent.cities as any
             return (
               <AgentCard
                 key={agent.id}

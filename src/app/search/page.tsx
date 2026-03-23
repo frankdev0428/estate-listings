@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import SearchFilters from '@/components/SearchFilters'
 import { Suspense } from 'react'
@@ -119,11 +118,10 @@ export default async function SearchPage({ searchParams }: Props) {
                       {/* Photo */}
                       <div className="relative h-44 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden">
                         {listing.image_url ? (
-                          <Image
+                          <img
                             src={listing.image_url}
                             alt={listing.title}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
                           <span className="text-4xl select-none">🏠</span>

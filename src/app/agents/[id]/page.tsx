@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
@@ -34,16 +33,16 @@ export default async function AgentProfilePage({ params }: Props) {
       {/* Profile Header */}
       <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-10 shadow-sm">
         <div className="flex flex-col sm:flex-row items-start gap-6">
-          <div className="relative w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-4xl overflow-hidden flex-shrink-0">
+          <div className="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-4xl overflow-hidden flex-shrink-0">
             {agent.avatar_url ? (
-              <Image src={agent.avatar_url} alt={agent.name} fill className="object-cover" />
+              <img src={agent.avatar_url} alt={agent.name} className="w-full h-full object-cover" />
             ) : '👤'}
           </div>
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-gray-900">{agent.name}</h1>
             {agent.cities && (
               <p className="text-gray-500 mt-1">
-                {(agent.cities as { name: string; state: string }).name}, {(agent.cities as { name: string; state: string }).state}
+                {(agent.cities as any).name}, {(agent.cities as any).state}
               </p>
             )}
             <div className="flex flex-wrap gap-4 mt-4">
@@ -101,9 +100,9 @@ export default async function AgentProfilePage({ params }: Props) {
             {listings.map((listing) => (
               <Link key={listing.id} href={`/listings/${listing.id}`}>
                 <div className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-                  <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 h-40 flex items-center justify-center">
+                  <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-40 flex items-center justify-center">
                     {listing.image_url ? (
-                      <Image src={listing.image_url} alt={listing.title} fill className="object-cover" />
+                      <img src={listing.image_url} alt={listing.title} className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-4xl">🏠</span>
                     )}

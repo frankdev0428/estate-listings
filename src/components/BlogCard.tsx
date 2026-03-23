@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 
 type Props = {
   slug: string
@@ -25,11 +24,10 @@ export default function BlogCard({
         {/* Cover */}
         <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 h-48 flex-shrink-0 overflow-hidden">
           {image_url ? (
-            <Image
+            <img
               src={image_url}
               alt={title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-5xl">📝</div>
@@ -50,9 +48,9 @@ export default function BlogCard({
 
           {/* Author + date */}
           <div className="flex items-center gap-2.5 mt-4 pt-4 border-t border-gray-100">
-            <div className="relative w-7 h-7 rounded-full bg-blue-100 overflow-hidden flex-shrink-0 flex items-center justify-center text-xs">
+            <div className="w-7 h-7 rounded-full bg-blue-100 overflow-hidden flex-shrink-0 flex items-center justify-center text-xs">
               {author_avatar
-                ? <Image src={author_avatar} alt={author_name} fill className="object-cover" />
+                ? <img src={author_avatar} alt={author_name} className="w-full h-full object-cover" />
                 : '✍️'}
             </div>
             <div className="min-w-0">

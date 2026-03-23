@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 
 export type AgentCardProps = {
   id: string
@@ -37,9 +36,9 @@ export default function AgentCard({
       {/* Top section */}
       <div className="p-6 flex items-start gap-4">
         {/* Avatar */}
-        <div className="relative w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-3xl overflow-hidden flex-shrink-0 ring-2 ring-blue-50">
+        <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-3xl overflow-hidden flex-shrink-0 ring-2 ring-blue-50">
           {avatar_url ? (
-            <Image src={avatar_url} alt={name} fill className="object-cover" />
+            <img src={avatar_url} alt={name} className="w-full h-full object-cover" />
           ) : (
             <span className="select-none">👤</span>
           )}

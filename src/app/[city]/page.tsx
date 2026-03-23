@@ -194,7 +194,7 @@ export default async function CityLandingPage({ params }: Props) {
                 <p>
                   {city.name} is one of the most sought-after markets in {city.state}, offering
                   a mix of established neighborhoods, new developments, and strong long-term
-                  appreciation. Whether you&apos;re looking for a starter condo or a family home,
+                  appreciation. Whether you're looking for a starter condo or a family home,
                   {' '}{city.name} has options across every budget range.
                 </p>
               </div>
@@ -206,7 +206,7 @@ export default async function CityLandingPage({ params }: Props) {
                 <p>
                   Buying your first home can feel overwhelming, but our agents in {city.name}
                   {' '}specialize in walking first-time buyers through every step — from getting
-                  pre-approved to closing day. You don&apos;t need any prior experience; your agent
+                  pre-approved to closing day. You don't need any prior experience; your agent
                   handles the negotiations, paperwork, and inspections on your behalf.
                 </p>
               </div>

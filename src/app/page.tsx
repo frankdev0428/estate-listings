@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import SearchFilters from '@/components/SearchFilters'
@@ -49,9 +48,9 @@ export default async function HomePage() {
             {cities.map((city) => (
               <Link key={city.id} href={`/cities/${city.id}`}>
                 <div className="group rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer">
-                  <div className="relative bg-gradient-to-br from-gray-200 to-gray-300 h-40 flex items-center justify-center">
+                  <div className="bg-gradient-to-br from-gray-200 to-gray-300 h-40 flex items-center justify-center">
                     {city.image_url ? (
-                      <Image src={city.image_url} alt={city.name} fill className="object-cover" />
+                      <img src={city.image_url} alt={city.name} className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-4xl">🏙️</span>
                     )}
@@ -101,7 +100,7 @@ export default async function HomePage() {
                 sqft={listing.sqft}
                 image_url={listing.image_url}
                 property_type={listing.property_type}
-                agent={listing.agents as { name: string; avatar_url?: string | null } | null}
+                agent={listing.agents as any}
               />
             ))}
           </div>
@@ -154,9 +153,9 @@ export default async function HomePage() {
               {agents.map((agent) => (
                 <Link key={agent.id} href={`/agents/${agent.id}`}>
                   <div className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow text-center cursor-pointer">
-                    <div className="relative w-16 h-16 rounded-full bg-blue-100 mx-auto mb-4 flex items-center justify-center text-2xl overflow-hidden">
+                    <div className="w-16 h-16 rounded-full bg-blue-100 mx-auto mb-4 flex items-center justify-center text-2xl overflow-hidden">
                       {agent.avatar_url ? (
-                        <Image src={agent.avatar_url} alt={agent.name} fill className="object-cover" />
+                        <img src={agent.avatar_url} alt={agent.name} className="w-full h-full object-cover" />
                       ) : (
                         '👤'
                       )}

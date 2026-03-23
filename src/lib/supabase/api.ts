@@ -63,7 +63,7 @@ export async function getAgentById(agentId: string): Promise<AgentRow | null> {
   if (error) return null
   if (!data) return null
 
-  const { cities, ...rest } = data as any
+  const { cities, ...rest } = data as { cities: { name: string; state: string } | null; [key: string]: unknown }
   return {
     ...rest,
     city_name: cities?.name ?? null,

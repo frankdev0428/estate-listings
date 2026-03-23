@@ -67,10 +67,10 @@ export default function LeadForm({ cities, defaultCityId, defaultAgentId }: Prop
     return (
       <div className="rounded-2xl border border-green-200 bg-green-50 p-8 text-center">
         <div className="text-4xl mb-3">✅</div>
-        <h3 className="text-xl font-semibold text-green-800 mb-1">You're all set!</h3>
+        <h3 className="text-xl font-semibold text-green-800 mb-1">You&apos;re all set!</h3>
         <p className="text-green-700 text-sm">
           {state.agentName
-            ? <>Your inquiry has been assigned to <strong>{state.agentName}</strong>. They'll be in touch shortly.</>
+            ? <>Your inquiry has been assigned to <strong>{state.agentName}</strong>. They&apos;ll be in touch shortly.</>
             : 'Your inquiry was submitted. An agent will reach out soon.'}
         </p>
       </div>

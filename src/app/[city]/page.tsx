@@ -18,12 +18,18 @@ function slugToName(slug: string) {
 // ─── Static params (build-time pre-rendering) ────────────────────────────────
 
 export async function generateStaticParams() {
-  // Must use static client — cookies() cannot be called at build time
-  const supabase = createStaticClient()
-  const { data: cities } = await supabase.from('cities').select('name')
-  return (cities ?? []).map((c) => ({
-    city: c.name.toLowerCase().replace(/\s+/g, '-'),
-  }))
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return []
+  }
+  try {
+    const supabase = createStaticClient()
+    const { data: cities } = await supabase.from('cities').select('name')
+    return (cities ?? []).map((c) => ({
+      city: c.name.toLowerCase().replace(/\s+/g, '-'),
+    }))
+  } catch {
+    return []
+  }
 }
 
 // ─── Metadata ────────────────────────────────────────────────────────────────

@@ -16,7 +16,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-markdown": "^10.1.0",
-    "resend": "^6.9.4"
+    "resend": "^6.9.4",
+    "vercel": "^50.35.0"
   },
   "devDependencies": {
     "@types/node": "^20",

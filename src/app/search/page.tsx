@@ -86,7 +86,7 @@ export default async function SearchPage({ searchParams }: Props) {
             ? 'No properties match your filters'
             : `${totalCount} propert${totalCount === 1 ? 'y' : 'ies'} found`}
           {searchParams.q && (
-            <span className="ml-1">for <strong>"{searchParams.q}"</strong></span>
+            <span className="ml-1">for <strong>&ldquo;{searchParams.q}&rdquo;</strong></span>
           )}
         </p>
       </div>

@@ -168,6 +168,36 @@ as $$
 $$;
 
 -- ============================================================
+-- BLOG
+-- ============================================================
+
+create table if not exists posts (
+  id           uuid primary key default gen_random_uuid(),
+  title        text not null,
+  slug         text not null unique,
+  excerpt      text,
+  content      text not null,
+  image_url    text,
+  category     text not null default 'General',
+  tags         text[] not null default '{}',
+  author_name  text not null default 'RealEstate Team',
+  author_avatar text,
+  published    boolean not null default false,
+  published_at timestamptz,
+  created_at   timestamptz default now()
+);
+
+alter table posts enable row level security;
+
+drop policy if exists "public_read_posts" on posts;
+create policy "public_read_posts" on posts
+  for select using (published = true);
+
+create index if not exists idx_posts_slug        on posts(slug);
+create index if not exists idx_posts_published   on posts(published, published_at desc);
+create index if not exists idx_posts_category    on posts(category);
+
+-- ============================================================
 -- INDEXES
 -- ============================================================
 

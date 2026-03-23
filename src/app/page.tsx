@@ -3,15 +3,17 @@ import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import SearchFilters from '@/components/SearchFilters'
 import ListingCard from '@/components/ListingCard'
+import BlogCard from '@/components/BlogCard'
 
 export default async function HomePage() {
   const supabase = createClient()
 
-  const [{ data: cities }, { data: agents }, { data: allCities }, { data: featuredListings }] = await Promise.all([
+  const [{ data: cities }, { data: agents }, { data: allCities }, { data: featuredListings }, { data: posts }] = await Promise.all([
     supabase.from('cities').select('*').order('listing_count', { ascending: false }).limit(6),
     supabase.from('agents').select('*').order('rating', { ascending: false }).limit(3),
     supabase.from('cities').select('id, name, state').order('name'),
     supabase.from('listings').select('*, agents(name, avatar_url)').order('created_at', { ascending: false }).limit(8),
+    supabase.from('posts').select('*').eq('published', true).order('published_at', { ascending: false }).limit(3),
   ])
 
   return (
@@ -101,6 +103,38 @@ export default async function HomePage() {
                 agent={listing.agents as any}
               />
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Blog Preview */}
+      {posts && posts.length > 0 && (
+        <section className="bg-gray-50 py-16">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900">From the Blog</h2>
+                <p className="text-gray-500 text-sm mt-1">Tips and guides for home buyers</p>
+              </div>
+              <Link href="/blog" className="text-blue-600 hover:underline font-medium">
+                View all &rarr;
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {posts.map((post) => (
+                <BlogCard
+                  key={post.id}
+                  slug={post.slug}
+                  title={post.title}
+                  excerpt={post.excerpt}
+                  image_url={post.image_url}
+                  category={post.category}
+                  author_name={post.author_name}
+                  author_avatar={post.author_avatar}
+                  published_at={post.published_at}
+                />
+              ))}
+            </div>
           </div>
         </section>
       )}

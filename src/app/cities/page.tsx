@@ -10,6 +10,8 @@ export default async function CitiesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="citiesComponent">
+    </div>
       <h1 className="text-4xl font-bold text-gray-900 mb-2">Browse Cities</h1>
       <p className="text-gray-500 mb-10">Find properties in your preferred city.</p>
 

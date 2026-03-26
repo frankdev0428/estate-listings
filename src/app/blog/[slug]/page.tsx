@@ -4,6 +4,8 @@ import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import { createClient } from '@/lib/supabase/server'
 import BlogCard from '@/components/BlogCard'
+import CommentForm from '@/components/CommentForm'
+import CommentList from '@/components/CommentList'
 
 interface Props {
   params: { slug: string }
@@ -159,6 +161,16 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </section>
       )}
+
+      {/* Comments */}
+      <section className="mt-14">
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">Comments</h2>
+        <CommentList postId={post.id} />
+        <div className="mt-10 pt-8 border-t border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900 mb-5">Leave a Comment</h3>
+          <CommentForm postId={post.id} slug={params.slug} />
+        </div>
+      </section>
 
       {/* Back link */}
       <div className="mt-10 pt-6 border-t border-gray-100">

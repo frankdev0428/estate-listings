@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import PhotoGallery from '@/components/PhotoGallery'
+import PropertyImageSlideshow from '@/components/PropertyImageSlideshow'
 
 interface Props {
   params: { id: string }
@@ -94,7 +94,7 @@ export default async function ListingPage({ params }: Props) {
         <div className="lg:col-span-2 space-y-8">
 
           {/* Photo gallery */}
-          <PhotoGallery images={allPhotos} title={listing.title} />
+          <PropertyImageSlideshow listingId={params.id} />
 
           {/* Title + price */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">

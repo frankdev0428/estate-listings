@@ -65,7 +65,7 @@ export default async function SearchPage({ searchParams }: Props) {
     default:           query = query.order('created_at', { ascending: false })
   }
 
-  const { data: listings, error } = await query.limit(48)
+  const { data: listings, error } = await query
 
   const totalCount = listings?.length ?? 0
   const hasFilters = !!(

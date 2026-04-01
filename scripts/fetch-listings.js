@@ -96,7 +96,8 @@ async function fetchListings(postal_code) {
     console.error(`API error for ${postal_code}: ${response.status}`);
     return [];
   }
-
+console.log("RapidAPI quota remaining:", response.headers.get("x-ratelimit-requests-remaining"));
+console.log("RapidAPI quota limit:", response.headers.get("x-ratelimit-requests-limit"));
   const data = await response.json();
   return data?.data?.home_search?.results ?? [];
 }

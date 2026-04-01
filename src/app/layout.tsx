@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Link from 'next/link'
 import Image from 'next/image'
+import StickyEmailBar from '@/components/StickyEmailBar'
+import ExitIntentPopup from '@/components/ExitIntentPopup'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -42,7 +44,9 @@ export default function RootLayout({
             </div>
           </div>
         </nav>
-        <main>{children}</main>
+        <main className="pb-20">{children}</main>
+        <StickyEmailBar />
+        <ExitIntentPopup />
         <footer className="bg-gray-900 text-gray-400 text-sm py-10 mt-20">
           <div className="max-w-7xl mx-auto px-4 text-center">
             <p>&copy; 2026 RealEstate App. All rights reserved.</p>

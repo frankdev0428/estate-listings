@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import PropertyImageSlideshow from '@/components/PropertyImageSlideshow'
+import ListingEmailAlert from '@/components/ListingEmailAlert'
 
 interface Props {
   params: { id: string }
@@ -272,6 +273,9 @@ export default async function ListingPage({ params }: Props) {
             <p className="font-semibold text-gray-900 text-sm">Estimated Monthly Cost</p>
             <MortgageEstimate price={listing.price} hoaFee={listing.hoa_fee} />
           </div>
+
+          {/* Email alert CTA */}
+          <ListingEmailAlert listingId={params.id} />
         </aside>
 
       </div>
